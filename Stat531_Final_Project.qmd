@@ -1,32 +1,52 @@
 ---
-title: "Lab 1: Introduction to Quarto"
+title: "Table 7 Lab: Field Dataset Cleaning - Solutions"
 format: html
 editor: source
-author: "Sage Kruleski"
+author: "Ansita Agrawal, Sage Kruleski, Auster Zhang"
 embed-resources: true
 code-tools: true
 echo: true #always show code
 error: true #keep rendering even if errors occur
 ---
 
+## Preamble
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
+## Load appropriate libraries
 ```{r}
-1 + 1
+library(dplyr)
 ```
 
-You can add options to executable code like this
-
+## Loading in files
 ```{r}
-#| echo: false
-2 * 2
+v1 <- read_csv("p_regilla_V1_field_data.csv")
+v2 <- read_csv("p_regilla_V2_field_data.csv")
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## Cleaning column headers
+```{r}
+v1 <- v1 |>
+  rename_with(str_to_camel)
+v2 <- v2 |>
+  rename_with(str_to_camel)
+```
+
+```{r}
+v1 <- v1 |>
+  mutate(latitudeManualGps = as.double(latitudeManualGps),
+         waterTemperatureC = as.double(waterTemperatureC))
+```
+
+## Creating full dataset
+```{r}
+full <- v2 |>
+  full_join(v1, by = join_by(
+      globalId, island, site, latitudeManualGps, longitudeManualGps, elevationM,
+      sex, totalMassG, bagMassG, waterTemperatureC, x, y,
+      collectionDateAndTime == creationDate, 
+      sulMm == svlMm, 
+      animalMassG == animalWeight, 
+      airTemperatureC == airTemperatureC44,
+      substrateType == substrate
+    )
+  )
+```
