@@ -105,8 +105,8 @@ glimpse(full)
 ```
 
 
-## Question 2: 
+## Question 2: Cleaning Date-Time Variables
 
-## Question 3: 
+## Question 3: Cleaning Body Mass Values
 
 ## Question 4: 
