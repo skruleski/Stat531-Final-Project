@@ -50,8 +50,8 @@ library(stringr)
 
 ## Loading in files
 ```{r}
-v1 <- read_csv("p_regilla_V1_field_data.csv")
-v2 <- read_csv("p_regilla_V2_field_data.csv")
+v1 <- read_csv("clean_p_regilla_V1_field_data.csv")
+v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 ```
 
 ## Question 1: Combining and Joining Ecological Data
