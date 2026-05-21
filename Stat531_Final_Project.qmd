@@ -66,36 +66,29 @@ The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were c
 ```
 
 
-***1b. Some variables in `v1` have different names than the same variables in `v2`. Rename the variables in `v1` so they match the names used in `v2`.***
+***1b. The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets***
 
-**Hint:** For example, `svlMm` in `v1` is the same measurement as `sulMm` in `v2`.
+**Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
+```{r}
+# Fix the columns that causes the errors, then run the join code cell again
+
+```
+
 
 ```{r}
 #code for 1b
+full <- v2 |>
+  _join(v1, by = join_by(
+      globalId, island, site, latitudeManualGps, longitudeManualGps, elevationM,
+      sex, totalMassG, bagMassG, waterTemperatureC, x, y,
+      collectionDateAndTime == creationDate, 
+      sulMm == svlMm, 
+      animalMassG == animalWeight, 
+      airTemperatureC == airTemperatureC44,
+      substrateType == substrate
+    )
+  )
 ```
-
-
-***1c. Add any columns to `v1` that are present in `v2` but missing from `v1`. Fill these new columns with `NA`.***
-
-**Hint:** This allows the two datasets to have the same structure before combining.
-
-```{r}
-#code for 1c
-```
-
-
-***1d. Combine `v1` and `v2` into one dataframe called `full`.***
-
-```{r}
-#code for 1d
-```
-
-***1e. Create a small metadata table that classifies each location as either `Channel Islands` or `California Mainland`. Join this metadata table to `full`.***
-
-```{r}
-#code for 1e
-```
-
 
 Run this code to check you have joined the data correctly
 ```{r}
