@@ -62,7 +62,7 @@ The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were c
 **Hint:** This will make the column names easier to work with in R.
 
 ```{r}
-#code for 1a
+# code for 1a
 ```
 
 
@@ -76,7 +76,7 @@ The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were c
 
 
 ```{r}
-#code for 1b
+# code for 1b
 full <- v2 |>
   _join(v1, by = join_by(
       globalId, island, site, latitudeManualGps, longitudeManualGps, elevationM,
@@ -99,6 +99,11 @@ glimpse(full)
 
 
 ## Question 2: Cleaning Date-Time Variables
+The application used to record the data automatically logs the data and time in UTC, however the surveys takes place in Coastal California. Fix the 'collectionDateAndTime' column to match the correct time zone.
+
+```{r}
+# code for Q2
+```
 
 ## Question 3: Cleaning Body Mass Values
 
