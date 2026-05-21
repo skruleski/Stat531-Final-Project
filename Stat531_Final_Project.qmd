@@ -114,3 +114,9 @@ The application used to record the data automatically logs the data and time in 
 ## Question 7: Create a figure comparing body mass to body length grouped by sex
 
 ## Question 8: Create a map of sampling locations
+
+## Question 9: make a nice table
+
+## optional question: statistics on body length/mass
+
+## optional question: make up simulations
