@@ -109,4 +109,10 @@ glimpse(full)
 
 ## Question 3: Cleaning Body Mass Values
 
-## Question 4: 
+## Question 4: Body mass measurements/averages (iterations)
+
+## Question 5: Temperature conversion (functions)
+
+## Question 7: Create a figure comparing body mass to body length grouped by sex
+
+## Question 8: Create a map of sampling locations
