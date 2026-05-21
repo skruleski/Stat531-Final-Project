@@ -1,0 +1,120 @@
+---
+title: "Table 7 Lab: Field Dataset Cleaning - Solutions"
+format: html
+editor: source
+author: "Ansita Agrawal, Sage Kruleski, Auster Zhang"
+embed-resources: true
+code-tools: true
+echo: true #always show code
+error: true #keep rendering even if errors occur
+---
+
+## Preamble
+
+## Load appropriate libraries
+```{r}
+library(dplyr)
+library(tidyverse)
+library(janitor)
+library(stringr)
+```
+
+## Loading in files
+```{r}
+v1 <- read_csv("p_regilla_V1_field_data.csv")
+v2 <- read_csv("p_regilla_V2_field_data.csv")
+```
+
+
+## Question 1: Combining and Joining Ecological Data
+
+The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
+
+***1a. Clean the column names in both datasets***
+**Hint:** This will make the column names easier to work with in R.
+
+```{r}
+## Cleaning column headers
+v1 <- v1 |>
+  rename_with(str_to_camel)
+
+v2 <- v2 |>
+  rename_with(str_to_camel)
+```
+
+
+***1b. Some variables in `v1` have different names than the same variables in `v2`. Rename the variables in `v1` so they match the names used in `v2`.***
+
+**Hint:** For example, `svlMm` in `v1` is the same measurement as `sulMm` in `v2`.
+
+```{r}
+## Rename v1 columns to match v2
+v1 <- v1 |>
+  rename(
+    sulMm = svlMm,
+    animalMassG = animalWeight,
+    photosTaken = photos,
+    measurerInitials = frogMeasurerInitials,
+    collectionDateAndTime = creationDate,
+    airTemperatureC = airTemperatureC44,
+    substrateType = substrate
+  )
+```
+
+
+***1c. Add any columns to `v1` that are present in `v2` but missing from `v1`. Fill these new columns with `NA`.***
+
+**Hint:** This allows the two datasets to have the same structure before combining.
+
+```{r}
+## Add columns that are in v2 but missing from v1
+v1 <- v1 |>
+  mutate(
+    correctCollectionDate = NA,
+    tissueCollected = NA,
+    recordsOnPaperDataSheet = NA,
+    otherSubstrateType = NA,
+    photoNumbers = NA
+  )
+```
+
+
+***1d. Combine `v1` and `v2` into one dataframe called `full`.***
+
+```{r}
+## Combine v1 and v2
+full <- bind_rows(v2, v1)
+```
+
+
+***1e. Create a small metadata table that classifies each location as either `Channel Islands` or `California Mainland`. Join this metadata table to `full`.***
+
+```{r}
+## metadata table
+island_info <- tibble(
+  island = c("Santa Cruz Island", "Mainland"),
+  region = c("Channel Islands", "California Mainland")
+)
+```
+
+```{r}
+## Join metadata to the full dataset
+full <- full |>
+  left_join(island_info, by = "island")
+```
+
+
+Run this code to check you have joined the data correctly
+```{r}
+dim(full)
+
+glimpse(full)
+```
+
+> We used `bind_rows()` because `v1` and `v2` contain different frog observations, not matching records. After combining the datasets, we used `left_join()` to add extra metadata about whether each record came from the Channel Islands or the California mainland.
+
+## Question 2: 
+
+## Question 3: 
+
+## Question 4: 
