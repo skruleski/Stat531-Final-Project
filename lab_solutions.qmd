@@ -1,0 +1,53 @@
+---
+title: "Table 7 Lab: Field Dataset Cleaning - Solutions"
+format: html
+editor: source
+author: "Ansita Agrawal, Sage Kruleski, Auster Zhang"
+embed-resources: true
+code-tools: true
+echo: true #always show code
+error: true #keep rendering even if errors occur
+---
+
+## Preamble
+
+## Load appropriate libraries
+```{r}
+library(dplyr)
+library(tidyverse)
+```
+
+## Loading in files
+```{r}
+v1 <- read_csv("p_regilla_V1_field_data.csv")
+v2 <- read_csv("p_regilla_V2_field_data.csv")
+```
+
+## Cleaning column headers
+```{r}
+v1 <- v1 |>
+  rename_with(str_to_camel)
+v2 <- v2 |>
+  rename_with(str_to_camel)
+```
+
+```{r}
+v1 <- v1 |>
+  mutate(latitudeManualGps = as.double(latitudeManualGps),
+         waterTemperatureC = as.double(waterTemperatureC))
+```
+
+## Creating full dataset
+```{r}
+full <- v2 |>
+  full_join(v1, by = join_by(
+      globalId, island, site, latitudeManualGps, longitudeManualGps, elevationM,
+      sex, totalMassG, bagMassG, waterTemperatureC, x, y,
+      collectionDateAndTime == creationDate, 
+      sulMm == svlMm, 
+      animalMassG == animalWeight, 
+      airTemperatureC == airTemperatureC44,
+      substrateType == substrate
+    )
+  )
+```
