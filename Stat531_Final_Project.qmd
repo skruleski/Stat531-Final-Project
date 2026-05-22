@@ -111,6 +111,7 @@ The application used to record the data automatically logs the data and time in 
 ## Question 4: Body mass measurements/averages (iterations)
 #Question 4a: group by body sizes (small, medium large)
 #Question 4b: make a table of grouped body sizes
+(show example table, something similar ot lab 7)
 #optional: run statistics on body length/mass 
 
 ## Question 5: Temperature conversion (functions)
@@ -124,6 +125,7 @@ Come columns measures temperature in Celsius, however for plotting and making th
 
 ## Question 8: Create a map of sampling locations
 
+Using the latitude and longitude GPS data, map the observation on the California map.**(may swap to county depending on how it looks)**
 
 
 ## optional question: make up simulations
