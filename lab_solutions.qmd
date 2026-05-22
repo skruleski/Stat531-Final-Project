@@ -51,3 +51,38 @@ full <- v2 |>
     )
   )
 ```
+
+
+#Question 8 - make a map
+```{r}
+#required packages
+library(tidyverse)
+#install.packages("auk")
+library(auk)
+#install.packages("rebird")
+library(rebird)
+#install.packages("sf")
+library(sf)
+#install.packages("terrainr")
+library(terrainr)
+```
+
+```{r}
+
+full |> 
+  filter(x != 0, y != 0)
+
+frog_geo <- st_as_sf(full,coords=c(x = "x", y = "y"),crs="WGS84") #Converts a regular dataframe → sf (simple features) object
+
+frog_geo_buf <- frog_geo |> st_buffer(dist = 5000)
+
+frog_tiles <- get_tiles(frog_geo_buf, services = "USGSTopo", resolution = 200) #Downloads map imagery (tiles) for your spatial extent
+
+ggplot() +
+  geom_spatial_rgb(data = frog_tiles$USGSTopo, mapping = aes(x, y, r = red, g = green, b = blue)) +
+  geom_sf(data = frog_geo, alpha = .75) +
+  labs(title = "xxx", 
+       caption="yyy")
+
+
+```

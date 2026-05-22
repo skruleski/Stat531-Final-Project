@@ -108,6 +108,9 @@ The application used to record the data automatically logs the data and time in 
 ## Question 3: Cleaning Body Mass Values
 
 ## Question 4: Body mass measurements/averages (iterations)
+#Question 4a: group by body sizes (small, medium large)
+#Question 4b: make a table of grouped body sizes
+#optional: run statistics on body length/mass 
 
 ## Question 5: Temperature conversion (functions)
 
@@ -115,8 +118,6 @@ The application used to record the data automatically logs the data and time in 
 
 ## Question 8: Create a map of sampling locations
 
-## Question 9: make a nice table
 
-## optional question: statistics on body length/mass
 
 ## optional question: make up simulations
