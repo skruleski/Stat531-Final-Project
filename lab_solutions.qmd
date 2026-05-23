@@ -88,7 +88,7 @@ ggplot() +
 ```
 
 
-#making a table with a summary function for body measurements
+#notes for making a table with a summary function for body measurements
 ```{r}
 #step 1 = clean site names
 clean_names <- full |>
