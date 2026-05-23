@@ -86,3 +86,68 @@ ggplot() +
 
 
 ```
+
+
+#making a table with a summary function for body measurements
+```{r}
+#step 1 = clean site names
+clean_names <- full |>
+  mutate(
+    site = case_when(
+      str_detect(str_to_lower(site), "san antonio") ~ "San Antonio creek
+",
+      str_detect(str_to_lower(site), "ucsb") ~ "UCSB North Open Space
+",
+      str_detect(str_to_lower(site), "rattlesnake") ~ "Rattlesnake Canyon Creek
+",
+str_detect(str_to_lower(site), "rattlesnake") ~ "Rattlesnake Canyon Creek
+",
+str_detect(str_to_lower(site), "rocky nook") ~ "Rocky Nook Park
+",
+str_detect(str_to_lower(site), "hazard") ~ "Hazard Creek Beach
+",
+str_detect(str_to_lower(site), "cascada") ~ "Cascada Canyon
+",
+str_detect(str_to_lower(site), "prisoners") ~ "Prisoners Harbor
+",
+str_detect(str_to_lower(site), "valley") ~ "Valley Anchorage Harbor
+",
+str_detect(str_to_lower(site), "del") ~ "Canyon Del Medio
+",
+str_detect(str_to_lower(site), "watt") ~ "Watt Road Pond
+",
+str_detect(str_to_lower(site), "trestle") ~ "Trestle Beach
+",
+str_detect(str_to_lower(site), "bear") ~ "Bear Creek Pond
+",
+str_detect(str_to_lower(site), "field") ~ "SCI Field Station
+",
+str_detect(str_to_lower(site), "1127") ~ "SCI Field Station
+",
+str_detect(str_to_lower(site), "along creek") ~ "SCI Field Station
+",
+      TRUE ~ site
+    )
+  )
+
+#make function
+frog_summary <- function(data, ..., length) {
+  
+  data |>
+    group_by(...) |>
+    summarise(
+      mean_length = mean({{ length  }}, na.rm = TRUE),
+      sd_length = sd({{ length  }}, na.rm = TRUE),
+      n = n(),
+      min = min({{ length   }}, na.rm = TRUE),
+      max = max({{ length }}, na.rm = TRUE)
+    )
+}
+
+#test code, group by sex and site
+clean_names |> frog_summary(site, sex, length = sulMm) |> 
+  kable()
+
+#need to remove sex NA (tadpoles are NA and don't have body lengths), need to add body mass
+```
+
