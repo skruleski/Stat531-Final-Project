@@ -130,24 +130,36 @@ str_detect(str_to_lower(site), "along creek") ~ "SCI Field Station
     )
   )
 
-#make function
-frog_summary <- function(data, ..., length) {
-  
+```
+
+
+```{r}
+
+#create mass column, remove sex = UK and unknown so we are only looking at adult frogs
+clean_names <- clean_names |> 
+  mutate(mass = totalMassG - bagMassG) |> 
+ filter(!sex %in% c("UK", "Unknown"))
+unique(clean_names$sex)
+
+frog_summary <- function(data, ..., summary_vars) {
   data |>
     group_by(...) |>
     summarise(
-      mean_length = mean({{ length  }}, na.rm = TRUE),
-      sd_length = sd({{ length  }}, na.rm = TRUE),
-      n = n(),
-      min = min({{ length   }}, na.rm = TRUE),
-      max = max({{ length }}, na.rm = TRUE)
+      across(
+        {{ summary_vars }},
+        list(
+          mean = ~ mean(.x, na.rm = TRUE),
+          sd = ~ sd(.x, na.rm = TRUE),
+          min = ~ min(.x, na.rm = TRUE),
+          max = ~ max(.x, na.rm = TRUE)
+        ),
+        .names = "{.col}_{.fn}"
+      ),
+      n = n()
     )
 }
 
-#test code, group by sex and site
-clean_names |> frog_summary(site, sex, length = sulMm) |> 
-  kable()
-
-#need to remove sex NA (tadpoles are NA and don't have body lengths), need to add body mass
+clean_names |> 
+  frog_summary(site, sex, summary_vars = c(sulMm, mass))
 ```
 
