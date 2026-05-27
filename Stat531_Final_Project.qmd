@@ -111,7 +111,7 @@ The application used to record the data automatically logs the data and time in 
 ## Question 4: Body mass measurements/averages (iterations)
 #Question 4a: group by body sizes (small, medium large)
 #Question 4b: make a table of grouped body sizes
-(show example table, something similar ot lab 7)
+(show example table, something similar to lab 7)
 #optional: run statistics on body length/mass 
 
 ## Question 5: Temperature conversion (functions)
