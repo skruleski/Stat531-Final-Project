@@ -121,6 +121,15 @@ Come columns measures temperature in Celsius, however for plotting and making th
 # code for Q5
 ```
 
+Run the code below to test your function:
+```{r}
+full <- full |> 
+  celsius_to_fahrenheit(c(waterTemperatureF = waterTemperatureC, airTemperatureF = airTemperatureC))
+full |>
+  select(waterTemperatureC, waterTemperatureF, airTemperatureC, airTemperatureF) |> 
+  slice_head(n = 5) |> 
+  kable()
+```
 ## Question 7: Create a figure comparing body mass to body length grouped by sex
 
 ## Question 8: Create a map of sampling locations

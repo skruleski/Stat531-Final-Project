@@ -15,6 +15,7 @@ error: true #keep rendering even if errors occur
 ```{r}
 library(dplyr)
 library(tidyverse)
+library(knitr)
 ```
 
 ## Loading in files
@@ -75,6 +76,28 @@ full <- full |>
   collectionDateAndTime = with_tz(collectionDateAndTime, 
                                    tzone = "America/Los_Angeles"))
 ```
+
+## Question 5: Temperature conversion (functions)
+
+Come columns measures temperature in Celsius, however for plotting and making the data more understandable, it is common to use Fahrenheit. Create a function that takes in the dataframe and using the columns containing Celsius values as inputs, convert those into Fahrenheit (we are creating a function since there are some columns that will be filled in later, such as dorsal and cloacal, that may want to be converted into the future).
+```{r}
+# Q5 Solution
+celsius_to_fahrenheit <- function(data, cols) {
+  data |>
+    mutate(across({{cols}}, ~ .x * 9/5 + 32))
+}
+```
+
+Run the code below to test your function:
+```{r}
+full <- full |> 
+  celsius_to_fahrenheit(c(waterTemperatureF = waterTemperatureC, airTemperatureF = airTemperatureC))
+full |>
+  select(waterTemperatureC, waterTemperatureF, airTemperatureC, airTemperatureF) |> 
+  slice_head(n = 5) |> 
+  kable()
+```
+
 #Question 8 - make a map
 ```{r}
 #required packages
