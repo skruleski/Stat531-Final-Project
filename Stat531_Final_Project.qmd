@@ -134,7 +134,11 @@ full |>
 
 ## Question 8: Create a map of sampling locations
 
-Using the latitude and longitude GPS data, map the observation on the California map.**(may swap to county depending on how it looks)**
+Using the latitude and longitude GPS data, map the observation on the California map. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.
+```{r}
+# code for Q8
+```
+
 
 
 ## optional question: make up simulations

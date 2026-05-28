@@ -16,6 +16,7 @@ error: true #keep rendering even if errors occur
 library(dplyr)
 library(tidyverse)
 library(knitr)
+library(maps)
 ```
 
 ## Loading in files
@@ -98,7 +99,25 @@ full |>
   kable()
 ```
 
-#Question 8 - make a map
+## Question 8: Create a map of sampling locations
+
+Using the latitude and longitude GPS data, map the observation on the California map. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.
+
+```{r}
+# Q8 Solution
+# when plotting the GPS points, one observation recorded (0,0), which is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
+states <- map_data("state")
+ca <- filter(states, region == "california")
+
+ggplot(data = ca, aes(x = long, y = lat)) +
+  geom_polygon(fill = "white", color = "grey25", linewidth = 0.1) +
+  coord_cartesian() +
+  geom_point(data = filter(full, y > 0), aes(x = x, y = y), color = "steelblue", alpha = 0.1) +
+  labs(title = "Map of recorded frog data in California",
+       x = "Latitude",
+       y = "Longitude")
+```
+
 ```{r}
 #required packages
 library(tidyverse)
@@ -208,3 +227,7 @@ clean_names |>
   frog_summary(site, sex, summary_vars = c(sulMm, mass))
 ```
 
+## References
+- [Creating Date/Time objects with inconsistent formats](https://www.r-bloggers.com/2024/09/mastering-date-and-time-data-in-r-with-lubridate/#:~:text=Solving%20Real%2DWorld%20Date%2DTime%20Issues)
+- [Renaming Columns Headers](https://www.statology.org/r-rename_with/)
+- [Mapping California](https://www.linkedin.com/learning/data-visualization-in-r-with-ggplot2-24583012/zooming-in-on-california)
