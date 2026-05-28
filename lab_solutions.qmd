@@ -15,6 +15,8 @@ error: true #keep rendering even if errors occur
 ```{r}
 library(dplyr)
 library(tidyverse)
+library(knitr)
+library(maps)
 ```
 
 ## Loading in files
@@ -23,15 +25,25 @@ v1 <- read_csv("clean_p_regilla_V1_field_data.csv")
 v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 ```
 
-## Cleaning column headers
+## Question 1: Combining and Joining Ecological Data
+
+The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
+
+***1a. Clean the column names in both datasets***
+**Hint:** This will make the column names easier to work with in R.
 ```{r}
+# 1a solution
 v1 <- v1 |>
   rename_with(str_to_camel)
 v2 <- v2 |>
   rename_with(str_to_camel)
 ```
 
+***1b. The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets***
+
+**Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
 ```{r}
+# 1b fix
 v1 <- v1 |>
   mutate(latitudeManualGps = as.double(latitudeManualGps),
          waterTemperatureC = as.double(waterTemperatureC))
@@ -39,6 +51,7 @@ v1 <- v1 |>
 
 ## Creating full dataset
 ```{r}
+# 1b solution
 full <- v2 |>
   full_join(v1, by = join_by(
       globalId, island, site, latitudeManualGps, longitudeManualGps, elevationM,
@@ -52,7 +65,58 @@ full <- v2 |>
   )
 ```
 
+## Question 2: Cleaning Date-Time Variables
 
+The application used to record the data automatically logs the data and time in UTC, however the surveys takes place in Coastal California. Fix the 'collectionDateAndTime' column to match the correct time zone.
+
+```{r}
+# Q2 solution
+full <- full |>
+  mutate(collectionDateAndTime = parse_date_time(collectionDateAndTime,
+                                                 orders = c("mdy HMS", "mdy HM")),
+  collectionDateAndTime = with_tz(collectionDateAndTime, 
+                                   tzone = "America/Los_Angeles"))
+```
+
+## Question 5: Temperature conversion (functions)
+
+Come columns measures temperature in Celsius, however for plotting and making the data more understandable, it is common to use Fahrenheit. Create a function that takes in the dataframe and using the columns containing Celsius values as inputs, convert those into Fahrenheit (we are creating a function since there are some columns that will be filled in later, such as dorsal and cloacal, that may want to be converted into the future).
+```{r}
+# Q5 Solution
+celsius_to_fahrenheit <- function(data, cols) {
+  data |>
+    mutate(across({{cols}}, ~ .x * 9/5 + 32))
+}
+```
+
+Run the code below to test your function:
+```{r}
+full <- full |> 
+  celsius_to_fahrenheit(c(waterTemperatureF = waterTemperatureC, airTemperatureF = airTemperatureC))
+full |>
+  select(waterTemperatureC, waterTemperatureF, airTemperatureC, airTemperatureF) |> 
+  slice_head(n = 5) |> 
+  kable()
+```
+
+## Question 8: Create a map of sampling locations
+
+Using the latitude and longitude GPS data, map the observation on the California map. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.
+
+```{r}
+# Q8 Solution
+# when plotting the GPS points, one observation recorded (0,0), which is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
+states <- map_data("state")
+ca <- filter(states, region == "california")
+
+ggplot(data = ca, aes(x = long, y = lat)) +
+  geom_polygon(fill = "white", color = "grey25", linewidth = 0.1) +
+  coord_cartesian() +
+  geom_point(data = filter(full, y > 0), aes(x = x, y = y), color = "steelblue", alpha = 0.1) +
+  labs(title = "Map of recorded frog data in California",
+       x = "Latitude",
+       y = "Longitude")
+```
 #Question 8 - make a map
 ```{r}
 #required packages
@@ -174,3 +238,7 @@ table <- table_data |>
   footnote(general = "SUL is snout urostyle length")
 ```
 
+## References
+- [Creating Date/Time objects with inconsistent formats](https://www.r-bloggers.com/2024/09/mastering-date-and-time-data-in-r-with-lubridate/#:~:text=Solving%20Real%2DWorld%20Date%2DTime%20Issues)
+- [Renaming Columns Headers](https://www.statology.org/r-rename_with/)
+- [Mapping California](https://www.linkedin.com/learning/data-visualization-in-r-with-ggplot2-24583012/zooming-in-on-california)
