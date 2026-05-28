@@ -106,12 +106,67 @@ The application used to record the data automatically logs the data and time in 
 # code for Q2
 ```
 
-## Question 3: Cleaning Body Mass Values
+## Question 3: Prepare data frame to make report - ready table
 
-## Question 4: Body mass measurements/averages (iterations)
-#Question 4a: group by body sizes (small, medium large)
-#Question 4b: make a table of grouped body sizes
+#Question 3a 
+clean site names. The names have been provided to you, use stringr syntax to clean row names
+```{r}
+# code for Q 3a 
+clean_names <- full |>
+  mutate(
+    site = case_when(
+      str_detect(str_to_lower(site), "") ~ "San Antonio creek",
+      str_detect(str_to_lower(site), "") ~ "UCSB North Open Space",
+      str_detect(str_to_lower(site), "") ~ "Rattlesnake Canyon Creek",
+str_detect(str_to_lower(site), "") ~ "Rattlesnake Canyon Creek",
+str_detect(str_to_lower(site), "") ~ "Rocky Nook Park",
+str_detect(str_to_lower(site), "") ~ "Hazard Creek Beach",
+str_detect(str_to_lower(site), "") ~ "Cascada Canyon",
+str_detect(str_to_lower(site), "") ~ "Prisoners Harbor",
+str_detect(str_to_lower(site), "") ~ "Valley Anchorage Harbor",
+str_detect(str_to_lower(site), "") ~ "Canyon Del Medio",
+str_detect(str_to_lower(site), "") ~ "Watt Road Pond",
+str_detect(str_to_lower(site), "") ~ "Trestle Beach",
+str_detect(str_to_lower(site), "") ~ "Bear Creek Pond",
+str_detect(str_to_lower(site), "") ~ "SCI Field Station",
+str_detect(str_to_lower(site), "") ~ "SCI Field Station",
+str_detect(str_to_lower(site), "") ~ "SCI Field Station",
+      is.na(site) ~ "SCI Field Station",
+      TRUE ~ "SCI Field Station"
+    )
+  )
+
+```
+
+#Question 3b
+calculate animal mass for column 'animalMassG', remove NA and unknown values for 'sex' so we are only looking at adult frogs
+
+```{r}
+# code for Q 3b
+```
+
+
+## Question 4: Body mass measurements/averages table (iterations)
+
+#Question 4a: 
+make a function named frog_summary() that takes a dataframe and calculates measurement values (mean, sd, min, and max), counts the sample size (n()), and renames columns from user-input columns
+```{r}
+# code for Q 4a
+```
+
+#Question 4b: 
+prep table by applying function, then ungrouping so table can include island and mainland as group headers
+```{r}
+# code for Q 4b
+```
+
+#Question 4c: make a table of body measurements grouped by island or mainland
+create a table that shows mass and sul as table headers for columns and island and mainland for grouped headers for rows
 (show example table, something similar to lab 7)
+```{r}
+# code for Q 4c
+```
+
 #optional: run statistics on body length/mass 
 
 ## Question 5: Temperature conversion (functions)
