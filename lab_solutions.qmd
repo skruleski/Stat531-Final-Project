@@ -15,8 +15,6 @@ error: true #keep rendering even if errors occur
 ```{r}
 library(dplyr)
 library(tidyverse)
-library(knitr)
-library(maps)
 ```
 
 ## Loading in files
@@ -25,25 +23,15 @@ v1 <- read_csv("clean_p_regilla_V1_field_data.csv")
 v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 ```
 
-## Question 1: Combining and Joining Ecological Data
-
-The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
-
-***1a. Clean the column names in both datasets***
-**Hint:** This will make the column names easier to work with in R.
+## Cleaning column headers
 ```{r}
-# 1a solution
 v1 <- v1 |>
   rename_with(str_to_camel)
 v2 <- v2 |>
   rename_with(str_to_camel)
 ```
 
-***1b. The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets***
-
-**Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
 ```{r}
-# 1b fix
 v1 <- v1 |>
   mutate(latitudeManualGps = as.double(latitudeManualGps),
          waterTemperatureC = as.double(waterTemperatureC))
@@ -51,7 +39,6 @@ v1 <- v1 |>
 
 ## Creating full dataset
 ```{r}
-# 1b solution
 full <- v2 |>
   full_join(v1, by = join_by(
       globalId, island, site, latitudeManualGps, longitudeManualGps, elevationM,
@@ -65,59 +52,8 @@ full <- v2 |>
   )
 ```
 
-## Question 2: Cleaning Date-Time Variables
 
-The application used to record the data automatically logs the data and time in UTC, however the surveys takes place in Coastal California. Fix the 'collectionDateAndTime' column to match the correct time zone.
-
-```{r}
-# Q2 solution
-full <- full |>
-  mutate(collectionDateAndTime = parse_date_time(collectionDateAndTime,
-                                                 orders = c("mdy HMS", "mdy HM")),
-  collectionDateAndTime = with_tz(collectionDateAndTime, 
-                                   tzone = "America/Los_Angeles"))
-```
-
-## Question 5: Temperature conversion (functions)
-
-Come columns measures temperature in Celsius, however for plotting and making the data more understandable, it is common to use Fahrenheit. Create a function that takes in the dataframe and using the columns containing Celsius values as inputs, convert those into Fahrenheit (we are creating a function since there are some columns that will be filled in later, such as dorsal and cloacal, that may want to be converted into the future).
-```{r}
-# Q5 Solution
-celsius_to_fahrenheit <- function(data, cols) {
-  data |>
-    mutate(across({{cols}}, ~ .x * 9/5 + 32))
-}
-```
-
-Run the code below to test your function:
-```{r}
-full <- full |> 
-  celsius_to_fahrenheit(c(waterTemperatureF = waterTemperatureC, airTemperatureF = airTemperatureC))
-full |>
-  select(waterTemperatureC, waterTemperatureF, airTemperatureC, airTemperatureF) |> 
-  slice_head(n = 5) |> 
-  kable()
-```
-
-## Question 8: Create a map of sampling locations
-
-Using the latitude and longitude GPS data, map the observation on the California map. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.
-
-```{r}
-# Q8 Solution
-# when plotting the GPS points, one observation recorded (0,0), which is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
-states <- map_data("state")
-ca <- filter(states, region == "california")
-
-ggplot(data = ca, aes(x = long, y = lat)) +
-  geom_polygon(fill = "white", color = "grey25", linewidth = 0.1) +
-  coord_cartesian() +
-  geom_point(data = filter(full, y > 0), aes(x = x, y = y), color = "steelblue", alpha = 0.1) +
-  labs(title = "Map of recorded frog data in California",
-       x = "Latitude",
-       y = "Longitude")
-```
-
+#Question 8 - make a map
 ```{r}
 #required packages
 library(tidyverse)
@@ -158,39 +94,24 @@ ggplot() +
 clean_names <- full |>
   mutate(
     site = case_when(
-      str_detect(str_to_lower(site), "san antonio") ~ "San Antonio creek
-",
-      str_detect(str_to_lower(site), "ucsb") ~ "UCSB North Open Space
-",
-      str_detect(str_to_lower(site), "rattlesnake") ~ "Rattlesnake Canyon Creek
-",
-str_detect(str_to_lower(site), "rattlesnake") ~ "Rattlesnake Canyon Creek
-",
-str_detect(str_to_lower(site), "rocky nook") ~ "Rocky Nook Park
-",
-str_detect(str_to_lower(site), "hazard") ~ "Hazard Creek Beach
-",
-str_detect(str_to_lower(site), "cascada") ~ "Cascada Canyon
-",
-str_detect(str_to_lower(site), "prisoners") ~ "Prisoners Harbor
-",
-str_detect(str_to_lower(site), "valley") ~ "Valley Anchorage Harbor
-",
-str_detect(str_to_lower(site), "del") ~ "Canyon Del Medio
-",
-str_detect(str_to_lower(site), "watt") ~ "Watt Road Pond
-",
-str_detect(str_to_lower(site), "trestle") ~ "Trestle Beach
-",
-str_detect(str_to_lower(site), "bear") ~ "Bear Creek Pond
-",
-str_detect(str_to_lower(site), "field") ~ "SCI Field Station
-",
-str_detect(str_to_lower(site), "1127") ~ "SCI Field Station
-",
-str_detect(str_to_lower(site), "along creek") ~ "SCI Field Station
-",
-      TRUE ~ site
+      str_detect(str_to_lower(site), "san antonio") ~ "San Antonio creek",
+      str_detect(str_to_lower(site), "ucsb") ~ "UCSB North Open Space",
+      str_detect(str_to_lower(site), "rattlesnake") ~ "Rattlesnake Canyon Creek",
+str_detect(str_to_lower(site), "rattlesnake") ~ "Rattlesnake Canyon Creek",
+str_detect(str_to_lower(site), "rocky nook") ~ "Rocky Nook Park",
+str_detect(str_to_lower(site), "hazard") ~ "Hazard Creek Beach",
+str_detect(str_to_lower(site), "cascada") ~ "Cascada Canyon",
+str_detect(str_to_lower(site), "prisoners") ~ "Prisoners Harbor",
+str_detect(str_to_lower(site), "valley") ~ "Valley Anchorage Harbor",
+str_detect(str_to_lower(site), "del") ~ "Canyon Del Medio",
+str_detect(str_to_lower(site), "watt") ~ "Watt Road Pond",
+str_detect(str_to_lower(site), "trestle") ~ "Trestle Beach",
+str_detect(str_to_lower(site), "bear") ~ "Bear Creek Pond",
+str_detect(str_to_lower(site), "field") ~ "SCI Field Station",
+str_detect(str_to_lower(site), "1127") ~ "SCI Field Station",
+str_detect(str_to_lower(site), "along creek") ~ "SCI Field Station",
+      is.na(site) ~ "SCI Field Station",
+      TRUE ~ "SCI Field Station"
     )
   )
 
@@ -198,13 +119,16 @@ str_detect(str_to_lower(site), "along creek") ~ "SCI Field Station
 
 
 ```{r}
+library(kableExtra)
 
-#create mass column, remove sex = UK and unknown so we are only looking at adult frogs
+#calculate animal mass, remove NA and unknown values for 'sex' so we are only looking at adult frogs
 clean_names <- clean_names |> 
-  mutate(mass = totalMassG - bagMassG) |> 
- filter(!sex %in% c("UK", "Unknown"))
+  mutate(animalMassG = totalMassG - bagMassG) |> 
+ filter(!sex %in% c("UK", "Unknown")) |> 
+  drop_na(sex)
 unique(clean_names$sex)
 
+#make a function that takes a dataframe and calculates measurement values (mean, sd, min, and max), counts the sample size (n()), and renames columns from user-input columns
 frog_summary <- function(data, ..., summary_vars) {
   data |>
     group_by(...) |>
@@ -223,11 +147,30 @@ frog_summary <- function(data, ..., summary_vars) {
     )
 }
 
-clean_names |> 
-  frog_summary(site, sex, summary_vars = c(sulMm, mass))
+#prep table by applying function, then ungrouping so table can include island and mainland as group headers
+table_data <- clean_names |> 
+  frog_summary(island, site, sex, summary_vars = c(sulMm, mass)) |> 
+  ungroup() |> 
+  arrange(island, site)
+  
+#create a table that shows mass and sul as table headers for columns and island and mainland for grouped headers for rows
+table <- table_data |> 
+  select(-island) |> 
+   select(site, sex, n, everything()) |> 
+  kable(digits = c(0, 1, 1, 0),
+        col.names = c("Site", "Sex", "N", "Mean", "SD", "Min", "Max","Mean", "SD", "Min", "Max" ),
+        caption = "Pacific chorus frog measurements. Frogs were captured on Santa Cruz Island and along adjacent mainland California sites.") |>
+  kable_classic(full_width = F,
+                bootstrap_options = "striped") |> 
+  add_header_above(c(" " = 3, "SUL (mm)" = 4, "Mass (g)" = 4),
+                   bold = TRUE) |> 
+  pack_rows("Mainland",
+            1,
+            sum(table_data$island == "Mainland")) |> 
+  pack_rows("Island",
+            sum(table_data$island == "Mainland") + 1,
+            nrow(table_data)) |> 
+  row_spec(row = 0, bold = T, align = "c") |> 
+  footnote(general = "SUL is snout urostyle length")
 ```
 
-## References
-- [Creating Date/Time objects with inconsistent formats](https://www.r-bloggers.com/2024/09/mastering-date-and-time-data-in-r-with-lubridate/#:~:text=Solving%20Real%2DWorld%20Date%2DTime%20Issues)
-- [Renaming Columns Headers](https://www.statology.org/r-rename_with/)
-- [Mapping California](https://www.linkedin.com/learning/data-visualization-in-r-with-ggplot2-24583012/zooming-in-on-california)
