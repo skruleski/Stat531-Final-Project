@@ -185,7 +185,24 @@ full |>
   slice_head(n = 5) |> 
   kable()
 ```
-## Question 7: Create a figure comparing body mass to body length grouped by sex
+
+## Question 7: Visualizing Frog Body Measurements
+Use the cleaned dataset to explore differences in frog body measurements across regions and sexes.
+
+###Question 7a: 
+Create a summary table showing:
+- average 'sulMm'
+- average 'animalMassG'
+
+for each combination of 'sex' and 'region'
+
+###Question 7b: 
+Create a figure that compares body measurements across sexes and regions.
+
+Your figure must:
+- use `ggplot2`
+- include labels and a title
+- use faceting by either `site` or `sex`
 
 ## Question 8: Create a map of sampling locations
 
