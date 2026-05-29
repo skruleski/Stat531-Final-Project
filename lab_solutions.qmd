@@ -78,11 +78,11 @@ full <- full |>
                                    tzone = "America/Los_Angeles"))
 ```
 
-## Question 5: Temperature conversion (functions)
+## Question 6: Temperature conversion (functions)
 
 Come columns measures temperature in Celsius, however for plotting and making the data more understandable, it is common to use Fahrenheit. Create a function that takes in the dataframe and using the columns containing Celsius values as inputs, convert those into Fahrenheit (we are creating a function since there are some columns that will be filled in later, such as dorsal and cloacal, that may want to be converted into the future).
 ```{r}
-# Q5 Solution
+# Q6 Solution
 celsius_to_fahrenheit <- function(data, cols) {
   data |>
     mutate(across({{cols}}, ~ .x * 9/5 + 32))
@@ -117,42 +117,13 @@ ggplot(data = ca, aes(x = long, y = lat)) +
        x = "Latitude",
        y = "Longitude")
 ```
-#Question 8 - make a map
-```{r}
-#required packages
-library(tidyverse)
-#install.packages("auk")
-library(auk)
-#install.packages("rebird")
-library(rebird)
-#install.packages("sf")
-library(sf)
-#install.packages("terrainr")
-library(terrainr)
-```
-
-```{r}
-
-full |> 
-  filter(x != 0, y != 0)
-
-frog_geo <- st_as_sf(full,coords=c(x = "x", y = "y"),crs="WGS84") #Converts a regular dataframe → sf (simple features) object
-
-frog_geo_buf <- frog_geo |> st_buffer(dist = 5000)
-
-frog_tiles <- get_tiles(frog_geo_buf, services = "USGSTopo", resolution = 200) #Downloads map imagery (tiles) for your spatial extent
-
-ggplot() +
-  geom_spatial_rgb(data = frog_tiles$USGSTopo, mapping = aes(x, y, r = red, g = green, b = blue)) +
-  geom_sf(data = frog_geo, alpha = .75) +
-  labs(title = "xxx", 
-       caption="yyy")
 
 
-```
+## Question 3: Prepare data frame to make report - ready table
 
+#Question 3a 
+clean site names. The names have been provided to you, use stringr syntax to clean row names
 
-#notes for making a table with a summary function for body measurements
 ```{r}
 #step 1 = clean site names
 clean_names <- full |>
@@ -181,7 +152,8 @@ str_detect(str_to_lower(site), "along creek") ~ "SCI Field Station",
 
 ```
 
-
+#Question 3b
+calculate animal mass for column 'animalMassG', remove NA and unknown values for 'sex' so we are only looking at adult frogs
 ```{r}
 library(kableExtra)
 
@@ -191,8 +163,15 @@ clean_names <- clean_names |>
  filter(!sex %in% c("UK", "Unknown")) |> 
   drop_na(sex)
 unique(clean_names$sex)
+```
 
-#make a function that takes a dataframe and calculates measurement values (mean, sd, min, and max), counts the sample size (n()), and renames columns from user-input columns
+
+#Question 4: Create function for calculating body measurements by user input columns
+
+#Question 4: 
+make a function named frog_summary() that takes a dataframe and calculates measurement values (mean, sd, min, and max), counts the sample size (n()), and renames columns from user-input columns
+```{r}
+
 frog_summary <- function(data, ..., summary_vars) {
   data |>
     group_by(...) |>
@@ -210,12 +189,25 @@ frog_summary <- function(data, ..., summary_vars) {
       n = n()
     )
 }
+```
+
+## Question 5: Body mass measurements/averages table
+
+#Question 5a 
+make a prep table by applying function, then ungroup so that the formatted table can include island and mainland as group headers.
+```{r}
 
 #prep table by applying function, then ungrouping so table can include island and mainland as group headers
 table_data <- clean_names |> 
-  frog_summary(island, site, sex, summary_vars = c(sulMm, mass)) |> 
+  frog_summary(island, site, sex, summary_vars = c(sulMm, animalMassG)) |> 
   ungroup() |> 
   arrange(island, site)
+```
+
+y#Question 5b
+create a table that shows mass and sul as table headers for columns and island and mainland for grouped headers for rows
+(show example table, something similar to lab 7)
+```{r}
   
 #create a table that shows mass and sul as table headers for columns and island and mainland for grouped headers for rows
 table <- table_data |> 
@@ -236,6 +228,8 @@ table <- table_data |>
             nrow(table_data)) |> 
   row_spec(row = 0, bold = T, align = "c") |> 
   footnote(general = "SUL is snout urostyle length")
+
+table
 ```
 
 ## References
