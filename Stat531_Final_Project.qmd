@@ -202,6 +202,9 @@ Your figure must:
 - use `ggplot2`
 - include labels and a title
 - use faceting by either `site` or `sex`
+```{r}
+# code for Q7
+```
 
 ## Question 8: Create a map of sampling locations
 
