@@ -254,21 +254,27 @@ ggplot(figure_data, aes(x = avg_sul, y = avg_mass, color = sex)) +
 
 ## Question 8: Create a map of sampling locations
 
-Using the latitude and longitude GPS data, map the observation on the California map. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.
+Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.
 
 ```{r}
 # Q8 Solution
 # when plotting the GPS points, one observation recorded (0,0), which is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
-states <- map_data("state")
-ca <- filter(states, region == "california")
+county <- map_data("county")
+ca <- filter(county, region == "california")
 
-ggplot(data = ca, aes(x = long, y = lat)) +
-  geom_polygon(fill = "white", color = "grey25", linewidth = 0.1) +
-  coord_cartesian() +
+ggplot(data = ca) +
+  geom_polygon(aes(x = long, y = lat, group = group), fill = "white", color = "grey25", linewidth = 0.1) +
+  coord_map() +
   geom_point(data = filter(full, y > 0), aes(x = x, y = y), color = "steelblue", alpha = 0.1) +
-  labs(title = "Map of recorded frog data in California",
-       x = "Latitude",
-       y = "Longitude")
+  xlab("") + ylab("") +
+  theme(plot.title = element_text(hjust = 0.5),
+        panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "none",
+        plot.margin = margin(0, 0, 0, 0, "cm"))
 ```
 
 
