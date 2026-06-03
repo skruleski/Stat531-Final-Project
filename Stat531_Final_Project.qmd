@@ -61,7 +61,7 @@ v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
 
 ***1a. Clean the column names in both datasets***
-**Hint:** This will make the column names easier to work with in R.
+**Hint:** Look into the function `rename_with()`. Camel case is useful! This will make the column names easier to work with in R.
 
 ```{r}
 # code for 1a
@@ -149,7 +149,9 @@ Continue to tidy up data table. Calculate animal mass for column 'animalMassG', 
 
 
 ## Question 4: Create function for calculating body measurements
-Make a function named 'frog_summary()' that takes a dataframe and user iniput columns to calculate measurement values (mean, sd, min, and max), count the sample size (n()), and renames columns from user-input columns
+Make a function named 'frog_summary()' that takes a *dataframe* and user input columns to calculate measurement values (mean, sd, min, and max), count the sample size (n()), and renames columns from user-input columns.
+
+**Hint:** Use a group_by() to prepare table that can be grouped by island, site, and sex. 
 ```{r}
 # code for Q 4
 
@@ -178,7 +180,12 @@ Finally, create a table that shows mass and sul as table headers for correspondi
 
 ## Question 6: Temperature conversion (functions)
 
-Come columns measures temperature in Celsius, however for plotting and making the data more understandable, it is common to use Fahrenheit. Create a function that takes in the dataframe and using the columns containing Celsius values as inputs, convert those into Fahrenheit (we are creating a function since there are some columns that will be filled in later, such as dorsal and cloacal, that may want to be converted into the future).
+Some columns measures temperature in Celsius, however for plotting and making the data more understandable, it is common to use Fahrenheit. Create a function that takes in the dataframe and using the columns containing Celsius values as inputs, convert those into Fahrenheit (we are creating a function since there are some columns that will be filled in later, such as dorsal and cloacal, that may want to be converted into the future).
+
+The function `celsius_to_fahrenheit` should take in a *dataframe* and a column (that you want to convert) and outputs a *dataframe*.
+
+**Note:** The new variable doesn't need to be defined, just update an existing one. 
+
 ```{r}
 # code for Q6
 ```
