@@ -163,7 +163,7 @@ table_data <- clean_names |>
   arrange(island, site)
 ```
 
-y#Question 5b
+#Question 5b
 create a table that shows mass and sul as table headers for columns and island and mainland for grouped headers for rows
 (show example table, something similar to lab 7)
 ```{r}
