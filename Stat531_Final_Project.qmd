@@ -213,16 +213,13 @@ Your figure must:
 # code for Q7
 ```
 
-Write 1-2 sentences describing one pattern visible in your figure.
+***Question 7a:*** Write 1-2 sentences describing one pattern visible in your figure. Are there any surprising results?
 
 ## Question 8: Create a map of sampling locations
 
-Using the latitude and longitude GPS data, map the observation on the California map. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.
+Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns 'x' and 'y', not latitude/longitudeManualGPS. Remove any points that are inaccurate. 
 ```{r}
 # code for Q8
 ```
 
 
-## Optional add: Compare the manual GPS coordinates and Survey123 coordinates.
-
-Are there observations where the two coordinate systems appear inconsistent?

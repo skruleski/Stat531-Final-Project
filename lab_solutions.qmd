@@ -30,7 +30,7 @@ v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
 
 ***1a. Clean the column names in both datasets***
-**Hint:** This will make the column names easier to work with in R.
+**Hint:** Look into the function `rename_with()`. Camel case is useful! This will make the column names easier to work with in R.
 ```{r}
 # 1a solution
 v1 <- v1 |>
@@ -78,10 +78,10 @@ full <- full |>
                                    tzone = "America/Los_Angeles"))
 ```
 
-## Question 3: Prepare data frame to make report - ready table
+## Question 3: Prepare data frame for making summary table
 
-#Question 3a 
-clean site names. The names have been provided to you, use stringr syntax to clean row names
+***Question 3a:*** 
+Tidy up site names. The correct names have been provided to you, use stringr syntax to clean corresponding row names
 
 ```{r}
 #step 1 = clean site names
@@ -111,8 +111,9 @@ str_detect(str_to_lower(site), "along creek") ~ "SCI Field Station",
 
 ```
 
-#Question 3b
-calculate animal mass for column 'animalMassG', remove NA and unknown values for 'sex' so we are only looking at adult frogs
+
+***Question 3b:***
+Continue to tidy up data table. Calculate animal mass for column 'animalMassG', remove NA and unknown values from 'sex' column so that we are only looking at adult frogs. 
 ```{r}
 library(kableExtra)
 
@@ -125,10 +126,10 @@ unique(clean_names$sex)
 ```
 
 
-#Question 4: Create function for calculating body measurements by user input columns
+## Question 4: Create function for calculating body measurements
+Make a function named 'frog_summary()' that takes a *dataframe* and user input columns to calculate measurement values (mean, sd, min, and max), count the sample size (n()), and renames columns from user-input columns.
 
-#Question 4: 
-make a function named frog_summary() that takes a dataframe and calculates measurement values (mean, sd, min, and max), counts the sample size (n()), and renames columns from user-input columns
+**Hint:** Use a group_by() to prepare table that can be grouped by island, site, and sex. 
 ```{r}
 
 frog_summary <- function(data, ..., summary_vars) {
@@ -150,10 +151,11 @@ frog_summary <- function(data, ..., summary_vars) {
 }
 ```
 
-## Question 5: Body mass measurements/averages table
+## Question 5: Create frog body measurement summary table
+Your goal is to present a report - ready summary table displaying frog body measurements, grouped by locality (island vs mainland). Apply your function for calculating body measurements to display in the table (sd, mean, min, and max).
 
-#Question 5a 
-make a prep table by applying function, then ungroup so that the formatted table can include island and mainland as group headers.
+***Question 5a:*** 
+First, make a prep table by applying the above function, group by island and mainland, and then ungroup so that the formatted table can include island and mainland as group headers but the column is not displayed in the table.
 ```{r}
 
 #prep table by applying function, then ungrouping so table can include island and mainland as group headers
@@ -163,9 +165,8 @@ table_data <- clean_names |>
   arrange(island, site)
 ```
 
-#Question 5b
-create a table that shows mass and sul as table headers for columns and island and mainland for grouped headers for rows
-(show example table, something similar to lab 7)
+***Question 5b:***
+Finally, create a table that shows mass and sul as table headers for corresponding columns and island and mainland as grouped headers for corresponding rows. Table should match the one below.
 ```{r}
   
 #create a table that shows mass and sul as table headers for columns and island and mainland for grouped headers for rows
@@ -193,7 +194,11 @@ table
 
 ## Question 6: Temperature conversion (functions)
 
-Come columns measures temperature in Celsius, however for plotting and making the data more understandable, it is common to use Fahrenheit. Create a function that takes in the dataframe and using the columns containing Celsius values as inputs, convert those into Fahrenheit (we are creating a function since there are some columns that will be filled in later, such as dorsal and cloacal, that may want to be converted into the future).
+Some columns measures temperature in Celsius, however for plotting and making the data more understandable, it is common to use Fahrenheit. Create a function that takes in the dataframe and using the columns containing Celsius values as inputs, convert those into Fahrenheit (we are creating a function since there are some columns that will be filled in later, such as dorsal and cloacal, that may want to be converted into the future).
+
+The function `celsius_to_fahrenheit` should take in a *dataframe* and a column (that you want to convert) and outputs a *dataframe*.
+
+**Note:** The new variable doesn't need to be defined, just update an existing one. 
 ```{r}
 # Q6 Solution
 celsius_to_fahrenheit <- function(data, cols) {
@@ -251,14 +256,17 @@ ggplot(figure_data, aes(x = avg_sul, y = avg_mass, color = sex)) +
   theme_minimal()
 ```
 
+***Question 7a:*** Write 1-2 sentences describing one pattern visible in your figure. Are there any surprising results?
+> Mention that females on Santa Cruz island appear to be an outlier. There is a positive trend between animal average mass and average SUL. Males tend to be smaller on average than females. 
 
 ## Question 8: Create a map of sampling locations
 
-Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.
+Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.Remove any points that are inaccurate. 
+> When plotting the GPS points, one observation recorded (0,0), which is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
 
 ```{r}
 # Q8 Solution
-# when plotting the GPS points, one observation recorded (0,0), which is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
+
 county <- map_data("county")
 ca <- filter(county, region == "california")
 
