@@ -47,7 +47,7 @@ This lab gives students experience cleaning authentic field data before performi
 
 (Not all libraries are loaded that you will need)
 ```{r}
-#| echo: FALSE
+#| message: FALSE
 library(dplyr)
 library(tidyverse)
 library(stringr)
@@ -55,7 +55,7 @@ library(stringr)
 
 ## Loading in files
 ```{r}
-#| echo: FALSE
+#| message: FALSE
 v1 <- read_csv("clean_p_regilla_V1_field_data.csv")
 v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 ```
