@@ -13,15 +13,18 @@ error: true #keep rendering even if errors occur
 
 ## Load appropriate libraries
 ```{r}
+#| echo: FALSE
 library(dplyr)
 library(tidyverse)
 library(knitr)
 library(maps)
+library(mapproj)
 library(kableExtra)
 ```
 
 ## Loading in files
 ```{r}
+#| echo: FALSE
 v1 <- read_csv("clean_p_regilla_V1_field_data.csv")
 v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 ```
@@ -42,7 +45,7 @@ v2 <- v2 |>
   rename_with(str_to_camel)
 ```
 
-***Question 1b:*** The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets.
+***Question 1b:*** The following code chunk creates the `Full` dataset. Use one of the dplyr mutating joins (not provided) to merge the two datasets.
 
 **Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
 
@@ -158,7 +161,7 @@ frog_summary <- function(data, ..., summary_vars) {
 Your goal is to present a report - ready summary table displaying frog body measurements, grouped by locality (island vs mainland). Apply your function for calculating body measurements to display in the table (sd, mean, min, and max).
 
 ***Question 5a:*** 
-First, make a prep table by applying the above function, group by island and mainland, and then ungroup so that the formatted table can include island and mainland as group headers but the column is not displayed in the table.
+First, make a prep table by applying the above function, group by island and mainland, and then ungroup so that the formatted table can include island and mainland as group headers but the column is *not* displayed in the table.
 ```{r}
 
 #prep table by applying function, then ungrouping so table can include island and mainland as group headers
@@ -267,7 +270,7 @@ ggplot(figure_data, aes(x = avg_sul, y = avg_mass, color = sex)) +
 
 Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns `x` and `y`, not latitude/longitudeManualGPS.Remove any points that are inaccurate. 
 
-> When plotting the GPS points, one observation recorded (0,0), which is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
+> When plotting the GPS points, one observation recorded (0,0) is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
 
 ```{r}
 # Q8 Solution

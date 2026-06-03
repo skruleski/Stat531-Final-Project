@@ -1,5 +1,5 @@
 ---
-title: "Table 7 Lab: Field Dataset Cleaning - Solutions"
+title: "Table 7 Lab: Field Dataset Cleaning"
 format: html
 editor: source
 author: "Ansita Agrawal, Sage Kruleski, Auster Zhang"
@@ -47,6 +47,7 @@ This lab gives students experience cleaning authentic field data before performi
 
 (Not all libraries are loaded that you will need)
 ```{r}
+#| echo: FALSE
 library(dplyr)
 library(tidyverse)
 library(stringr)
@@ -54,6 +55,7 @@ library(stringr)
 
 ## Loading in files
 ```{r}
+#| echo: FALSE
 v1 <- read_csv("clean_p_regilla_V1_field_data.csv")
 v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 ```
@@ -70,7 +72,7 @@ The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were c
 # code for 1a
 ```
 
-***Question 1b:*** The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets.
+***Question 1b:*** The following code chunk creates the `Full` dataset. Use one of the dplyr mutating joins (not provided) to merge the two datasets.
 
 **Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
 
@@ -166,7 +168,7 @@ Make a function named `frog_summary()` that takes a *dataframe* and user input c
 Your goal is to present a report - ready summary table displaying frog body measurements, grouped by locality (island vs mainland). Apply your function for calculating body measurements to display in the table (sd, mean, min, and max).
 
 ***Question 5a:*** 
-First, make a prep table by applying the above function, group by island and mainland, and then ungroup so that the formatted table can include island and mainland as group headers but the column is not displayed in the table.
+First, make a prep table by applying the above function, group by island and mainland, and then ungroup so that the formatted table can include island and mainland as group headers but the column is *not* displayed in the table.
 
 
 ```{r}
