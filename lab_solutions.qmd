@@ -17,6 +17,7 @@ library(dplyr)
 library(tidyverse)
 library(knitr)
 library(maps)
+library(kableExtra)
 ```
 
 ## Loading in files
@@ -29,8 +30,10 @@ v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 
 The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
 
-***1a. Clean the column names in both datasets***
+***Question 1a:*** Clean the column names in both datasets.
+
 **Hint:** Look into the function `rename_with()`. Camel case is useful! This will make the column names easier to work with in R.
+
 ```{r}
 # 1a solution
 v1 <- v1 |>
@@ -39,9 +42,10 @@ v2 <- v2 |>
   rename_with(str_to_camel)
 ```
 
-***1b. The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets***
+***Question 1b:*** The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets.
 
 **Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
+
 ```{r}
 # 1b fix
 v1 <- v1 |>
@@ -67,7 +71,7 @@ full <- v2 |>
 
 ## Question 2: Cleaning Date-Time Variables
 
-The application used to record the data automatically logs the data and time in UTC, however the surveys takes place in Coastal California. Fix the 'collectionDateAndTime' column to match the correct time zone.
+The application used to record the data automatically logs the data and time in UTC, however the surveys takes place in Coastal California. Fix the `collectionDateAndTime` column to match the correct time zone.
 
 ```{r}
 # Q2 solution
@@ -113,9 +117,8 @@ str_detect(str_to_lower(site), "along creek") ~ "SCI Field Station",
 
 
 ***Question 3b:***
-Continue to tidy up data table. Calculate animal mass for column 'animalMassG', remove NA and unknown values from 'sex' column so that we are only looking at adult frogs. 
+Continue to tidy up data table. Calculate animal mass for column `animalMassG`, remove NA and unknown values from `sex` column so that we are only looking at adult frogs. 
 ```{r}
-library(kableExtra)
 
 #calculate animal mass, remove NA and unknown values for 'sex' so we are only looking at adult frogs
 clean_names <- clean_names |> 
@@ -127,9 +130,9 @@ unique(clean_names$sex)
 
 
 ## Question 4: Create function for calculating body measurements
-Make a function named 'frog_summary()' that takes a *dataframe* and user input columns to calculate measurement values (mean, sd, min, and max), count the sample size (n()), and renames columns from user-input columns.
+Make a function named `frog_summary()` that takes a *dataframe* and user input columns to calculate measurement values (mean, sd, min, and max), count the sample size (n()), and renames columns from user-input columns.
 
-**Hint:** Use a group_by() to prepare table that can be grouped by island, site, and sex. 
+**Hint:** Use a `group_by()` to prepare table that can be grouped by island, site, and sex. 
 ```{r}
 
 frog_summary <- function(data, ..., summary_vars) {
@@ -257,11 +260,13 @@ ggplot(figure_data, aes(x = avg_sul, y = avg_mass, color = sex)) +
 ```
 
 ***Question 7a:*** Write 1-2 sentences describing one pattern visible in your figure. Are there any surprising results?
+
 > Mention that females on Santa Cruz island appear to be an outlier. There is a positive trend between animal average mass and average SUL. Males tend to be smaller on average than females. 
 
 ## Question 8: Create a map of sampling locations
 
-Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns 'x' and 'y', not latitude/longitudeManualGPS.Remove any points that are inaccurate. 
+Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns `x` and `y`, not latitude/longitudeManualGPS.Remove any points that are inaccurate. 
+
 > When plotting the GPS points, one observation recorded (0,0), which is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
 
 ```{r}

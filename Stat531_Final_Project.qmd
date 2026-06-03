@@ -42,11 +42,13 @@ This lab gives students experience cleaning authentic field data before performi
 - `waterTemperatureC`: water temperature recorded in Celsius
 - `airTemperatureC`: air temperature recorded in Celsius
 - `x` and `y`: coordinates automatically recorded by Survey123
+
 ## Load appropriate libraries
+
+(Not all libraries are loaded that you will need)
 ```{r}
 library(dplyr)
 library(tidyverse)
-library(janitor)
 library(stringr)
 ```
 
@@ -60,22 +62,22 @@ v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 
 The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
 
-***1a. Clean the column names in both datasets***
+***Question 1a:*** Clean the column names in both datasets.
+
 **Hint:** Look into the function `rename_with()`. Camel case is useful! This will make the column names easier to work with in R.
 
 ```{r}
 # code for 1a
 ```
 
-
-***1b. The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets***
+***Question 1b:*** The following code chunk creates the Full dataset. Use one of the dplyr mutating joins to merge the two datasets.
 
 **Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
+
 ```{r}
 # Fix the columns that causes the errors, then run the join code cell again
 
 ```
-
 
 ```{r}
 # code for 1b
@@ -92,7 +94,7 @@ full <- v2 |>
   )
 ```
 
-Run this code to check you have joined the data correctly
+Run this code to check you have joined the data correctly:
 ```{r}
 dim(full)
 
@@ -102,7 +104,7 @@ glimpse(full)
 
 ## Question 2: Cleaning Date-Time Variables
 
-The application used to record the data automatically logs the data and time in UTC, however the surveys takes place in Coastal California. Fix the 'collectionDateAndTime' column to match the correct time zone.
+The application used to record the data automatically logs the data and time in UTC, however the surveys takes place in Coastal California. Fix the `collectionDateAndTime` column to match the correct time zone.
 
 ```{r}
 # code for Q2
@@ -112,6 +114,7 @@ The application used to record the data automatically logs the data and time in 
 
 ***Question 3a:*** 
 Tidy up site names. The correct names have been provided to you, use stringr syntax to clean corresponding row names
+
 ```{r}
 # code for Q 3a 
 clean_names <- full |>
@@ -141,7 +144,7 @@ str_detect(str_to_lower(site), "") ~ "SCI Field Station",
 ```
 
 ***Question 3b:***
-Continue to tidy up data table. Calculate animal mass for column 'animalMassG', remove NA and unknown values from 'sex' column so that we are only looking at adult frogs. 
+Continue to tidy up data table. Calculate animal mass for column `animalMassG`, remove NA and unknown values from `sex` column so that we are only looking at adult frogs. 
 
 ```{r}
 # code for Q 3b
@@ -149,15 +152,17 @@ Continue to tidy up data table. Calculate animal mass for column 'animalMassG', 
 
 
 ## Question 4: Create function for calculating body measurements
-Make a function named 'frog_summary()' that takes a *dataframe* and user input columns to calculate measurement values (mean, sd, min, and max), count the sample size (n()), and renames columns from user-input columns.
 
-**Hint:** Use a group_by() to prepare table that can be grouped by island, site, and sex. 
+Make a function named `frog_summary()` that takes a *dataframe* and user input columns to calculate measurement values (mean, sd, min, and max), count the sample size (n()), and renames columns from user-input columns.
+
+**Hint:** Use a `group_by()` to prepare table that can be grouped by island, site, and sex. 
 ```{r}
 # code for Q 4
 
 ```
 
 ## Question 5: Create frog body measurement summary table
+
 Your goal is to present a report - ready summary table displaying frog body measurements, grouped by locality (island vs mainland). Apply your function for calculating body measurements to display in the table (sd, mean, min, and max).
 
 ***Question 5a:*** 
@@ -201,6 +206,7 @@ full |>
 ```
 
 ## Question 7: Visualizing Frog Body Measurements
+
 Use the cleaned dataset to explore differences in frog body measurements across regions and sexes.
 
 Create a figure that compares body measurements across sexes and regions.
@@ -209,6 +215,7 @@ Your figure must:
 - use `ggplot2`
 - include labels and a title
 - use faceting by either `site` or `sex`
+
 ```{r}
 # code for Q7
 ```
@@ -217,7 +224,7 @@ Your figure must:
 
 ## Question 8: Create a map of sampling locations
 
-Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns 'x' and 'y', not latitude/longitudeManualGPS. Remove any points that are inaccurate. 
+Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns `x` and `y`, not latitude/longitudeManualGPS. Remove any points that are inaccurate. 
 ```{r}
 # code for Q8
 ```
