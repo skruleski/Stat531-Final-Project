@@ -69,7 +69,7 @@ The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were c
 **Hint:** Look into the function `rename_with()`. Camel case is useful! This will make the column names easier to work with in R.
 
 ```{r}
-# code for 1a
+# code for Q1a
 ```
 
 ***Question 1b:*** The following code chunk creates the `Full` dataset. Use one of the dplyr mutating joins (not provided) to merge the two datasets.
@@ -82,7 +82,7 @@ The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were c
 ```
 
 ```{r}
-# code for 1b
+# code for Q1b
 full <- v2 |>
   _join(v1, by = join_by(
       globalId, island, site, latitudeManualGps, longitudeManualGps, elevationM,
@@ -118,7 +118,7 @@ The application used to record the data automatically logs the data and time in 
 Tidy up site names. The correct names have been provided to you, use stringr syntax to clean corresponding row names
 
 ```{r}
-# code for Q 3a 
+# code for Q3a 
 clean_names <- full |>
   mutate(
     site = case_when(
@@ -149,7 +149,7 @@ str_detect(str_to_lower(site), "") ~ "SCI Field Station",
 Continue to tidy up data table. Calculate animal mass for column `animalMassG`, remove NA and unknown values from `sex` column so that we are only looking at adult frogs. 
 
 ```{r}
-# code for Q 3b
+# code for Q3b
 ```
 
 
@@ -159,7 +159,7 @@ Make a function named `frog_summary()` that takes a *dataframe* and user input c
 
 **Hint:** Use a `group_by()` to prepare table that can be grouped by island, site, and sex. 
 ```{r}
-# code for Q 4
+# code for Q4
 
 ```
 
@@ -172,7 +172,7 @@ First, make a prep table by applying the above function, group by island and mai
 
 
 ```{r}
-# code for Q 5a (prep table)
+# code for Q5a (prep table)
 
 ```
 
@@ -180,7 +180,7 @@ First, make a prep table by applying the above function, group by island and mai
 Finally, create a table that shows mass and sul as table headers for corresponding columns and island and mainland as grouped headers for corresponding rows. Table should match the one below.
 
 ```{r}
-# code for Q 5b (formatted table)
+# code for Q5b (formatted table)
 ```
 
 ![Formatted table displaying frog body measurements, grouped by locality (island or mainland)](table_screenshot.png)

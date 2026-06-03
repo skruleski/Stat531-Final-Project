@@ -38,7 +38,7 @@ The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were c
 **Hint:** Look into the function `rename_with()`. Camel case is useful! This will make the column names easier to work with in R.
 
 ```{r}
-# 1a solution
+# Q1a solution
 v1 <- v1 |>
   rename_with(str_to_camel)
 v2 <- v2 |>
@@ -50,7 +50,7 @@ v2 <- v2 |>
 **Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
 
 ```{r}
-# 1b fix
+# Q1b fix
 v1 <- v1 |>
   mutate(latitudeManualGps = as.double(latitudeManualGps),
          waterTemperatureC = as.double(waterTemperatureC))
@@ -58,7 +58,7 @@ v1 <- v1 |>
 
 ## Creating full dataset
 ```{r}
-# 1b solution
+# Q1b solution
 full <- v2 |>
   full_join(v1, by = join_by(
       globalId, island, site, latitudeManualGps, longitudeManualGps, elevationM,
