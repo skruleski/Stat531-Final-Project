@@ -31,7 +31,7 @@ v2 <- read_csv("clean_p_regilla_V2_field_data.csv")
 
 ## Question 1: Combining and Joining Ecological Data
 
-The files `p_regilla_V1_field_data.csv` and `p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
+The files `clean_p_regilla_V1_field_data.csv` and `clean_p_regilla_V2_field_data.csv` were collected using different versions of the same Survey123 form. Before we can analyze the data, we need to clean the column names, make the two datasets use the same variable names, and combine them into one dataset.
 
 ***Question 1a:*** Clean the column names in both datasets.
 
@@ -47,7 +47,7 @@ v2 <- v2 |>
 
 ***Question 1b:*** The following code chunk creates the `Full` dataset. Use one of the dplyr mutating joins (not provided) to merge the two datasets.
 
-**Note:** The merge will fail due to some columns having incompatible types. Locate which columns causes these issues and typecast them in the **v1** dataset.
+**Note:** The merge will fail due to some columns having incompatible types. Locate which columns cause these issues and typecast them in the **v1** dataset.
 
 ```{r}
 # Q1b fix
@@ -74,7 +74,7 @@ full <- v2 |>
 
 ## Question 2: Cleaning Date-Time Variables
 
-The application used to record the data automatically logs the data and time in UTC, however the surveys takes place in Coastal California. Fix the `collectionDateAndTime` column to match the correct time zone.
+The application used to record the data automatically logs the data and time in UTC, however the surveys take place in Coastal California. Fix the `collectionDateAndTime` column to match the correct time zone.
 
 ```{r}
 # Q2 solution
@@ -98,7 +98,6 @@ clean_names <- full |>
       str_detect(str_to_lower(site), "san antonio") ~ "San Antonio creek",
       str_detect(str_to_lower(site), "ucsb") ~ "UCSB North Open Space",
       str_detect(str_to_lower(site), "rattlesnake") ~ "Rattlesnake Canyon Creek",
-str_detect(str_to_lower(site), "rattlesnake") ~ "Rattlesnake Canyon Creek",
 str_detect(str_to_lower(site), "rocky nook") ~ "Rocky Nook Park",
 str_detect(str_to_lower(site), "hazard") ~ "Hazard Creek Beach",
 str_detect(str_to_lower(site), "cascada") ~ "Cascada Canyon",
@@ -268,7 +267,7 @@ ggplot(figure_data, aes(x = avg_sul, y = avg_mass, color = sex)) +
 
 ## Question 8: Create a map of sampling locations
 
-Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns `x` and `y`, not latitude/longitudeManualGPS.Remove any points that are inaccurate. 
+Using the latitude and longitude GPS data, map the observation on the California map that also shows the county lines. Use the columns `x` and `y`, not latitude/longitudeManualGPS. Remove any points that are inaccurate. 
 
 > When plotting the GPS points, one observation recorded (0,0) is not a valid point. Users must get rid of this datapoint somehow. How the map is created is free to the user. An alpha is incorporated so that overlaps of points are explicit
 
