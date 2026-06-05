@@ -259,6 +259,38 @@ ggplot(figure_data, aes(x = avg_sul, y = avg_mass, color = sex)) +
     size = "Sample Size"
   ) +
   theme_minimal()
+
+```
+![Example figure comparing average frog body size and mass by sex and region](q7_example_figure.png)
+
+```{r}
+
+# Example figure (not part of the solution)
+
+example_data <- full |>
+  filter(
+    !is.na(airTemperatureC),
+    !is.na(waterTemperatureC),
+    !is.na(island)
+  )
+
+ggplot(example_data,
+       aes(x = airTemperatureC,
+           y = waterTemperatureC,
+           color = island)) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(~ island) +
+  labs(
+    title = "Air and Water Temperature Measurements by Region",
+    subtitle = "Example of a labeled and faceted figure",
+    x = "Air Temperature (°C)",
+    y = "Water Temperature (°C)",
+    color = "Region"
+  ) +
+  theme_minimal()
+
+ggsave("q7_example_figure.png", width = 8, height = 5)
+
 ```
 
 ***Question 7a:*** Write 1-2 sentences describing one pattern visible in your figure. Are there any surprising results?

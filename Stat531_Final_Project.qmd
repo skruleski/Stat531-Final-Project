@@ -221,6 +221,8 @@ Your figure must:
 # code for Q7
 ```
 
+![Example figure comparing average frog body size and mass by sex and region](q7_example_figure.png)
+
 ***Question 7a:*** Write 1-2 sentences describing one pattern visible in your figure. Are there any surprising results?
 
 ## Question 8: Create a map of sampling locations
